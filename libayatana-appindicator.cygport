@@ -1,0 +1,94 @@
+inherit gnome2
+
+NAME="libayatana-appindicator"
+VERSION=0.5.3
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="Ayatana application indicator library"
+DESCRIPTION="Application Indicators are a GNOME implementation of the
+StatusNotifierItem Specification (SNI) that was originally submitted to
+freedesktop.org by KDE. The Ayatana Indicator project intends to become
+the new upstream for application indicators and associated projects with a
+focus on making Ayatana Indicators a desktop agnostic technology."
+HOMEPAGE="https://ayatanaindicators.github.io/"
+SRC_URI="https://github.com/AyatanaIndicators/libayatana-appindicator/archive/${VERSION}/libayatana-appindicator-${VERSION}.tar.gz"
+SRC_DIR="libayatana-appindicator-${VERSION}"
+PATCH_URI="0.5.3-no-undefined.patch"
+
+PKG_NAMES="libayatana-appindicator1 libayatana-appindicator-devel
+	   libayatana-appindicator3_1 libayatana-appindicator3-devel
+	   libayatana-appindicator-common libayatana-appindicator-doc
+	   girepository-AyatanaAppIndicator0.1 girepository-AyatanaAppIndicator3_0.1
+	   python2-ayatana_appindicator
+	   vala-ayatana-appindicator0.1 vala-ayatana-appindicator3_0.1"
+libayatana_appindicator1_REQUIRES="${NAME}-common"
+libayatana_appindicator1_CONTENTS="
+	usr/bin/cygayatana-appindicator-1.dll
+"
+#libayatana_appindicator_devel_OBSOLETES="libappindicator-devel"
+libayatana_appindicator_devel_CONTENTS="
+	usr/include/libayatana-appindicator-0.1/
+	usr/lib/libayatana-appindicator.dll.a
+	usr/lib/pkgconfig/ayatana-appindicator-0.1.pc
+	usr/lib/pkgconfig/appindicator-0.1.pc
+"
+libayatana_appindicator3_1_REQUIRES="${NAME}-common"
+libayatana_appindicator3_1_CONTENTS="
+	usr/bin/cygayatana-appindicator3-1.dll
+"
+#libayatana_appindicator3_devel_OBSOLETES="libappindicator3-devel"
+libayatana_appindicator3_devel_CONTENTS="
+	usr/include/libayatana-appindicator3-0.1/
+	usr/lib/libayatana-appindicator3.dll.a
+	usr/lib/pkgconfig/ayatana-appindicator3-0.1.pc
+	usr/lib/pkgconfig/appindicator3-0.1.pc
+"
+libayatana_appindicator_common_CONTENTS="
+	usr/share/doc/${NAME}
+"
+libayatana_appindicator_doc_CONTENTS="
+	usr/share/gtk-doc/html/libayatana-appindicator/
+"
+python2_ayatana_appindicator_CONTENTS="
+	usr/lib/python2.7/site-packages/ayatana_appindicator/
+	usr/share/pygtk/2.0/defs/ayatana_appindicator.defs
+"
+girepository_AyatanaAppIndicator0_1_CONTENTS="
+	usr/*/gir*-1.0/AyatanaAppIndicator-0.1.*
+"
+girepository_AyatanaAppIndicator3_0_1_CONTENTS="
+	usr/*/gir*-1.0/AyatanaAppIndicator3-0.1.*
+"
+vala_ayatana_appindicator0_1_CONTENTS="
+	usr/share/vala/vapi/ayatana-appindicator-0.1.*
+"
+vala_ayatana_appindicator3_0_1_CONTENTS="
+	usr/share/vala/vapi/ayatana-appindicator3-0.1.*
+"
+
+
+src_compile() {
+	cd ${S}
+	gnome2_autoreconf
+
+	mkdir -p ${B}/gtk2
+	cd ${B}/gtk2
+	gnome2_compile --with-gtk=2
+
+	mkdir -p ${B}/gtk3
+	cd ${B}/gtk3
+	gnome2_compile --with-gtk=3
+}
+
+src_install() {
+	cd ${B}/gtk3
+	cyginstall
+	cd ${B}/gtk2
+	cyginstall
+
+	# avoid short-term changes to packages
+	dosym libayatana-appindicator /usr/include/libayatana-appindicator-0.1/libappindicator
+	dosym ayatana-appindicator-0.1.pc /usr/lib/pkgconfig/appindicator-0.1.pc
+	dosym libayatana-appindicator /usr/include/libayatana-appindicator3-0.1/libappindicator
+	dosym ayatana-appindicator3-0.1.pc /usr/lib/pkgconfig/appindicator3-0.1.pc
+}

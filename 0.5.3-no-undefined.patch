@@ -1,0 +1,13 @@
+--- origsrc/libayatana-appindicator-0.5.3/bindings/python/Makefile.am	2018-03-20 05:25:55.000000000 -0500
++++ src/libayatana-appindicator-0.5.3/bindings/python/Makefile.am	2018-04-23 14:40:01.113744100 -0500
+@@ -19,8 +19,8 @@ pkgappindicator_PYTHON = __init__.py
+ appindicatordir = $(pkgpyexecdir)/ayatana_appindicator
+ appindicator_LTLIBRARIES = _ayatana_appindicator.la
+ 
+-_ayatana_appindicator_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_ayatana_appindicator
+-_ayatana_appindicator_la_LIBADD = $(APPINDICATOR_PYTHON_LIBS) -L$(top_builddir)/src/.libs -layatana-appindicator
++_ayatana_appindicator_la_LDFLAGS = -module -avoid-version -no-undefined -export-symbols-regex init_ayatana_appindicator
++_ayatana_appindicator_la_LIBADD = $(APPINDICATOR_PYTHON_LIBS) -L$(top_builddir)/src/.libs -layatana-appindicator -lpython$(PYTHON_VERSION)
+ _ayatana_appindicator_la_SOURCES = ayatana_appindicatormodule.c
+ nodist__ayatana_appindicator_la_SOURCES = ayatana_appindicator.c
+ 
